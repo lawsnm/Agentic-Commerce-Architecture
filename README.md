@@ -1,8 +1,7 @@
 # Agentic AI Commerce Architecture
 
-<img width="1222" height="569" alt="security-monitoring-dashboard" src="https://github.com/user-attachments/assets/c3edb2a5-532d-4dc8-8ba9-f9f256e56dfe" />
+## <img width="1222" height="569" alt="security-monitoring-dashboard" src="https://github.com/user-attachments/assets/c3edb2a5-532d-4dc8-8ba9-f9f256e56dfe" />
 
-Description: 
 This project demonstrates a modular, secure, AI-driven e-commerce system architecture built using Clean Architecture, SOLID principles, and n8n automation to coordinate AI services. It displays real-world software design, security engineering, and automation using agent-based workflows. It integrates clean architecture, order processing, authentication risk detection, and transactional communication.
 
 The system showcases how intelligent agents can analyze products using multimodal inputs (text, images, and video), automate secure checkout pipelines, generate diverse receipts, and assess login threats using external reputation services and AI-based decision logic.
