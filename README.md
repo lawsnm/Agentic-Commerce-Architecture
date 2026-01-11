@@ -13,6 +13,7 @@ This repository represents a refinded and abstracted portfolio version of a prod
 - Clean Architecture Layering (Controllers, Use Cases, Gateways)
 - SOLID design principles in modular service design
 - Security Practices
+- Built a simulated HTML/CSS website using [Loveable](https://lovable.dev/) and connected it with our AI Chat Agent
 
 ## Architecture Principles  
 - Single Responsibility: Each service performs it's own function
