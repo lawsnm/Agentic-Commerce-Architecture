@@ -8,8 +8,8 @@ The system showcases how intelligent agents can analyze products using multimoda
 This repository represents a refinded and abstracted portfolio version of a production-grade system. Branding, business logic, data models, and proprietary workflows have been intentionally removed to protect intellectual property while preserving the technical architecture.
 
 ## Features Demonstrated
-- Agentic AI Automation with n8n
-- Authentication & Login Risk Detection using [AbuseIPDB(https://www.abuseipdb.com/)
+- Agentic AI Automation with [n8n](https://n8n.io/)
+- Authentication & Login Risk Detection using [AbuseIPDB](https://www.abuseipdb.com/)
 - Clean Architecture Layering (Controllers, Use Cases, Gateways)
 - SOLID design principles in modular service design
 - Security Practices
