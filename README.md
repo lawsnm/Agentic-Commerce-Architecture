@@ -19,7 +19,7 @@ This repository represents a refined and abstracted portfolio version of a produ
 - Single Responsibility: Each service performs it's own function
 - Open/Closed: AI Agents extend their functionality without having to reconfigure it's core services
 - Dependency Inversion: High-Level components should not rely on the lower level components. Instead these components rely on a bstraction to interact with other classes
-- Interface Segregation: Branches interfaces for AI, payments, email, and euthentication layers
+- Interface Segregation: Branches interfaces for AI, payments, email, and authentication layers
 
 ### Intellectual Property Notice
 This repository is a portfolio abstraction of a production architecture. Business branding, revenue models, market-specific logic, and proprietary workflows have been removed to protect intellectual property. 
