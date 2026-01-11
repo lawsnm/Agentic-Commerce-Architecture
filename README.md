@@ -22,4 +22,5 @@ This repository represents a refinded and abstracted portfolio version of a prod
 - Interface Segregation: Branches interfaces for AI, payments, email, and euthentication layers
 
 ### Intellectual Property Notice
-This repository is a portfolio abstraction of a production architecture. Business branding, revenue models, market-specific logic, and proprietary workflows have been removed to protect intellectual property.
+This repository is a portfolio abstraction of a production architecture. Business branding, revenue models, market-specific logic, and proprietary workflows have been removed to protect intellectual property. 
+Note: Provided information has been renamed to protect the legal ownership
