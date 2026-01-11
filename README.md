@@ -7,7 +7,7 @@ The system showcases how intelligent agents can analyze products using multimoda
 
 This repository represents a refinded and abstracted portfolio version of a production-grade system. Branding, business logic, data models, and proprietary workflows have been intentionally removed to protect intellectual property while preserving the technical architecture.
 
-# Key Technologies & Concepts:
+## Key Technologies & Concepts
 - Agentic AI Automation with n8n
 - Clean Architecture 
 - SOLID design principles
