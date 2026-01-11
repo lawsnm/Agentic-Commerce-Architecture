@@ -1,0 +1,495 @@
+{
+  "name": "Platform Auth System - User Authentication and Security",
+  "nodes": [
+    {
+      "parameters": {
+        "modelName": "models/generic-model",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGeneric",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        320
+      ],
+      "id": "ed43a2ff-48c7-4372-97fc-23572aa31712",
+      "name": "AI Service Provider",
+      "credentials": {
+        "aiApi": {
+          "id": "API_KEY_ID_REDACTED",
+          "name": "AI Service API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook-uuid-redacted",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -368,
+        0
+      ],
+      "id": "02392b74-20ff-4fa7-90a2-67d4656d2a29",
+      "name": "POST Webhook",
+      "webhookId": "webhook-uuid-redacted"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "46e66610-10e1-423e-b265-b2fdec3c1e1a",
+                    "leftValue": "={{ $json.output.risk_assessment.risk_level }}",
+                    "rightValue": "high",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "547a655c-854b-4a86-b265-f838f6bbd977",
+                    "leftValue": "={{ $json.output.risk_assessment.risk_level }}",
+                    "rightValue": "High",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cbad73b2-f695-4663-9aa7-94c6047b56d7",
+                    "leftValue": "={{ $json.output.risk_assessment.risk_level }}",
+                    "rightValue": "medium",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "82f4ce6c-2481-4781-83ac-f1339c89dceb",
+                    "leftValue": "={{ $json.output.risk_assessment.risk_level }}",
+                    "rightValue": "Medium",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "92737719-0569-4c42-ad87-53217f33ca2f",
+                    "leftValue": "={{ $json.output.risk_assessment.risk_level }}",
+                    "rightValue": "low",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "75501733-2d54-45e2-8e7f-78aebfc5986d",
+                    "leftValue": "={{ $json.output.risk_assessment.risk_level }}",
+                    "rightValue": "Low",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        464,
+        -64
+      ],
+      "id": "1c197e2a-1039-4105-999a-86961f17207e",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Analyze this network data and provide a comprehensive security assessment. CRUCIALLY: Display ALL networking information completely without truncation - especially IP addresses, ports, protocols, and security flags.\n\nInclude:\n1. Complete IP addresses (no truncation)\n2. Full port numbers and service information\n3. All network headers and routing data\n4. Timestamps with timezone\n5. Geographic location details\n6. Any security indicators or threat scores\n\nInput data: {{ $json }}\n\nFormat response with clear sections and ensure all networking details are fully visible.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a network security analyst. Always prioritize and fully display critical networking information including:\n- IP addresses (source, destination, internal, external)\n- Port numbers and protocols\n- Timestamps and geolocation data\n- Network headers and routing information\n- Security flags and threat indicators\n- MAC addresses and device identifiers\n\nNever truncate or hide networking details. Present all IPs, ports, and network metadata in complete, readable format."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -96,
+        0
+      ],
+      "id": "e19f846e-1226-4659-97d4-94b97f3d6886",
+      "name": "AI Security Analyzer"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"authentication\": {\n    \"valid_credentials\": \"={{ $json.authentication.valid_credentials }}\",\n    \"user_exists\": \"={{ $json.authentication.user_exists }}\",\n    \"account_status\": \"={{ $json.authentication.account_status }}\",\n    \"password_strength\": \"={{ $json.authentication.password_strength }}\",\n    \"email_validation\": \"={{ $json.authentication.email_validation }}\"\n  },\n  \"network_information\": {\n    \"source_ip\": \"={{ $json.network_information.source_ip }}\",\n    \"destination_ip\": \"={{ $json.network_information.destination_ip }}\",\n    \"public_ip\": \"={{ $json.network_information.public_ip }}\",\n    \"mac_address\": \"={{ $json.network_information.mac_address }}\",\n    \"port_numbers\": {\n      \"source_port\": \"={{ $json.network_information.port_numbers.source_port }}\",\n      \"destination_port\": \"={{ $json.network_information.port_numbers.destination_port }}\"\n    },\n    \"protocol\": \"={{ $json.network_information.protocol }}\",\n    \"geolocation\": {\n      \"country\": \"={{ $json.network_information.geolocation.country }}\",\n      \"region\": \"={{ $json.network_information.geolocation.region }}\",\n      \"city\": \"={{ $json.network_information.geolocation.city }}\",\n      \"timezone\": \"={{ $json.network_information.geolocation.timezone }}\",\n      \"isp\": \"={{ $json.network_information.geolocation.isp }}\"\n    },\n    \"network_headers\": {\n      \"user_agent\": \"={{ $json.network_information.network_headers.user_agent }}\",\n      \"x_forwarded_for\": \"={{ $json.network_information.network_headers.x_forwarded_for }}\",\n      \"x_real_ip\": \"={{ $json.network_information.network_headers.x_real_ip }}\"\n    }\n  },\n  \"risk_assessment\": {\n    \"risk_score\": \"={{ $json.risk_assessment.risk_score }}\",\n    \"risk_level\": \"={{ $json.risk_assessment.risk_level }}\",\n    \"confidence\": \"={{ $json.risk_assessment.confidence }}\",\n    \"threat_indicators\": \"={{ $json.risk_assessment.threat_indicators }}\",\n    \"abuseipdb_score\": \"={{ $json.risk_assessment.abuseipdb_score }}\"\n  },\n  \"security_recommendations\": {\n    \"immediate_actions\": \"={{ $json.security_recommendations.immediate_actions }}\",\n    \"verification_methods\": \"={{ $json.security_recommendations.verification_methods }}\",\n    \"session_restrictions\": \"={{ $json.security_recommendations.session_restrictions }}\",\n    \"network_monitoring\": \"={{ $json.security_recommendations.network_monitoring }}\"\n  },\n  \"detailed_reasoning\": \"={{ $json.detailed_reasoning }}\",\n  \"normalized_risk_level\": \"={{ $json.risk_assessment.risk_level.toLowerCase() }}\"\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -32,
+        192
+      ],
+      "id": "b9e4aa0d-8129-40a4-afe7-56d2d3259970",
+      "name": "Output Parser"
+    },
+    {
+      "parameters": {
+        "content": "         POST WEBHOOK\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nUsing frontend builder we create a user interface example of a account login/signup. Webhook listens for the information types in the portal and retrieves it and  brings it into n8n",
+        "height": 416,
+        "width": 256,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -448,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "e2cd2bfe-e147-4655-b1b7-4f0cdd369ee3",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "                AI AGENT\n             ANALYZES RISK\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+        "height": 608,
+        "width": 336,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -112,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "b4daa247-c0e5-47d7-a6f6-09c1b2805a73",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "sendTo": "user@example.com",
+        "subject": "=⚠️ SUSPICIOUS ACTIVITY",
+        "message": "=<!DOCTYPE html>\n<html>\n<head>\n    <style>\n        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; padding: 20px; }\n        .container { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }\n        .header { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 25px; text-align: center; }\n        .content { padding: 25px; }\n        .alert-box { background: #dbeafe; border-left: 4px solid #2563eb; padding: 15px; margin: 20px 0; border-radius: 4px; }\n        .mfa-box { background: #f0f9ff; border: 2px dashed #2563eb; padding: 25px; text-align: center; border-radius: 8px; margin: 25px 0; }\n        .mfa-code { font-size: 42px; font-weight: bold; color: #1d4ed8; letter-spacing: 8px; margin: 15px 0; font-family: monospace; }\n        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }\n        .info-card { background: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 3px solid #2563eb; }\n        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; border-top: 1px solid #e9ecef; }\n        .warning { color: #dc2626; font-weight: bold; }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <div class=\"header\">\n            <h1>Security Verification Required</h1>\n            <p>Login Attempt Detected - MFA Code Required</p>\n        </div>\n        \n        <div class=\"content\">\n            <div class=\"alert-box\">\n                <h2>Suspicious Login Attempt</h2>\n                <p>We detected a login attempt to your account that requires additional verification.</p>\n            </div>\n            \n            <div class=\"info-grid\">\n                <div class=\"info-card\">\n                    <strong>Location</strong><br>\n                    {{ $json.security_context.location }}\n                </div>\n                <div class=\"info-card\">\n                    <strong>IP Address</strong><br>\n                    <code>{{ $json.security_context.ip_address }}</code>\n                </div>\n                <div class=\"info-card\">\n                    <strong>Time</strong><br>\n                    {{ $json.security_context.attempt_time }}\n                </div>\n                <div class=\"info-card\">\n                    <strong>Risk Level</strong><br>\n                    <span class=\"warning\">MEDIUM</span>\n                </div>\n            </div>\n            \n            <div class=\"mfa-box\">\n                <h2>Your Verification Code</h2>\n                <div class=\"mfa-code\">${mfaCode}</div>\n                <p><strong>Expires in: 10 minutes</strong></p>\n                <p>Enter this code to complete your login verification.</p>\n            </div>\n            \n            <div style=\"background: #fef3c7; padding: 15px; border-radius: 6px; border: 1px solid #fcd34d;\">\n                <h3>Security Notice</h3>\n                <ul>\n                    <li>Never share this code with anyone</li>\n                    <li>This code will expire in 10 minutes</li>\n                    <li>If you didn't attempt this login, secure your account immediately</li>\n                    <li>This verification helps protect against unauthorized access</li>\n                </ul>\n            </div>\n        </div>\n        \n        <div class=\"footer\">\n            <p><strong>Automated Security System</strong></p>\n            <p>This is an automated security message. Please do not reply.</p>\n        </div>\n    </div>\n</body>\n</html>`,\n    \n    // MFA details\n    mfa_code: mfaCode,\n    mfa_expires: new Date(Date.now() + 10 * 60 * 1000).toISOString(),\n    timestamp: new Date().toISOString()\n  }\n}];",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1488,
+        144
+      ],
+      "id": "27e796fc-5193-4aa0-88b9-6538a680e5b5",
+      "name": "Email Alert Customer - 2",
+      "webhookId": "webhook-id-redacted",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CREDENTIAL_ID_REDACTED",
+          "name": "Email Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "admin@system.com",
+        "subject": "=🚨 SECURITY ALERT - IMMEDIATE ACTION REQUIRED",
+        "message": "=<!DOCTYPE html>\n<html>\n<head>\n    <style>\n        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; }\n        .header { background: linear-gradient(135deg, #ff4444, #cc0000); color: white; padding: 25px; text-align: center; border-radius: 8px 8px 0 0; }\n        .alert-section { background: #fff3f3; padding: 20px; margin: 20px 0; border-left: 4px solid #ff4444; }\n        .action-section { background: #fffce6; padding: 20px; border: 1px solid #ffd700; border-radius: 8px; margin: 20px 0; }\n        .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }\n        .metric-card { background: white; padding: 20px; text-align: center; border-radius: 8px; border-top: 4px solid #ff4444; }\n        .footer { background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; color: #666; }\n        .urgent { color: #cc0000; font-weight: bold; }\n        .checkbox { margin-right: 10px; }\n        h1, h2, h3 { margin-top: 0; }\n    </style>\n</head>\n<body>\n    <div class=\"header\">\n        <h1>🚨 SECURITY ALERT</h1>\n        <p>Malicious IP Detected - Immediate Action Required</p>\n    </div>\n\n    <div class=\"alert-section\">\n        <h2>📊 Threat Intelligence Summary</h2>\n        <div style=\"display: grid; grid-template-columns: 1fr 1fr; gap: 20px;\">\n            <div>\n                <p><strong>IP Address:</strong><br><code style=\"background: #f8f9fa; padding: 3px 10px; border-radius: 4px; font-size: 16px;\">203.0.113.45</code></p>\n                <p><strong>Total Abuse Reports:</strong><br><span class=\"urgent\">16</span></p>\n                <p><strong>Brute Force Attacks:</strong><br><span class=\"urgent\">6</span></p>\n            </div>\n            <div>\n                <p><strong>SSH Attacks:</strong><br><span class=\"urgent\">6</span></p>\n                <p><strong>Last Reported:</strong><br>2025-08-20</p>\n                <p><strong>Alert Time:</strong><br>2025-11-16T21:27:39.342Z</p>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"action-section\">\n        <h2>🛡️ Required Actions</h2>\n        \n        <h3 style=\"color: #cc0000;\">IMMEDIATE ACTIONS:</h3>\n        <ul>\n            <li>✅ Block IP 203.0.113.45 in firewall</li>\n            <li>✅ Review recent login attempts from this IP</li>\n            <li>✅ Check for compromised accounts</li>\n        </ul>\n        \n        <h3 style=\"color: #b8860b;\">INVESTIGATION:</h3>\n        <ul>\n            <li>🔍 Analyze network logs for related activity</li>\n            <li>🔍 Review system access patterns</li>\n            <li>🔍 Check for data exfiltration attempts</li>\n        </ul>\n    </div>\n\n    <div class=\"metrics\">\n        <div class=\"metric-card\">\n            <div style=\"font-size: 32px; color: #ff4444; font-weight: bold;\">6</div>\n            <div style=\"font-size: 14px; color: #666;\">Brute Force Attacks</div>\n        </div>\n        <div class=\"metric-card\">\n            <div style=\"font-size: 32px; color: #ff6b6b; font-weight: bold;\">6</div>\n            <div style=\"font-size: 14px; color: #666;\">SSH Attacks</div>\n        </div>\n        <div class=\"metric-card\">\n            <div style=\"font-size: 32px; color: #ff8e8e; font-weight: bold;\">16</div>\n            <div style=\"font-size: 14px; color: #666;\">Total Reports</div>\n        </div>\n    </div>\n\n    <div class=\"footer\">\n        <p><strong>Automated Alert from Security Monitoring System</strong></p>\n        <p>Generated via n8n workflow</p>\n    </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1968,
+        -464
+      ],
+      "id": "1cbd6ff8-7bcb-4003-a8d1-e65fdba0f422",
+      "name": "Email Alert - Admin",
+      "webhookId": "webhook-id-redacted",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CREDENTIAL_ID_REDACTED",
+          "name": "Email Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.abuseipdb.com/api/v2/reports",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={\n  \"ipAddress\": \"{{ $json.output.network_information.public_ip }}\",\n  \"maxAgeInDays\": 90\n}",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n    \"Key\": \"API_KEY_REDACTED\",\n    \"Accept\": \"application/json\",\n    \"Content-Type\": \"application/x-www-form-urlencoded\"\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n    \"ip\": \"203.0.113.45\",\n    \"categories\": \"18,22\",\n    \"comment\": \"Forced login attempts detected from our network\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        -512
+      ],
+      "id": "82bebbbf-f60e-4dac-b4d7-2be3895e5ffc",
+      "name": "HTTP Request - Threat Intelligence API"
+    },
+    {
+      "parameters": {
+        "jsCode": "const allInputs = $input.all();\nconst aiAnalysis = allInputs[0]?.json;\n\n// Generate MFA code (6-digit)\nconst mfaCode = Math.floor(100000 + Math.random() * 900000).toString();\n\n// Extract location and IP data\nconst ipAddress = aiAnalysis.network_information?.public_ip || 'Unknown IP';\nconst city = aiAnalysis.network_information?.geolocation?.city || 'Unknown City';\nconst country = aiAnalysis.network_information?.geolocation?.country || 'Unknown Country';\nconst currentTime = new Date().toLocaleString();\n\nreturn [{\n  json: {\n    success: true,\n    status: \"quarantined\",\n    risk_level: \"medium\",\n    message: \"Additional verification required - Suspicious login attempt detected\",\n    user_message: \"Please check your email for MFA verification code\",\n    \n    // MFA details\n    mfa_code: mfaCode,\n    mfa_expires: new Date(Date.now() + 10 * 60 * 1000).toISOString(),\n    \n    // Security context\n    security_context: {\n      ip_address: ipAddress,\n      location: `${city}, ${country}`,\n      attempt_time: currentTime,\n      threat_level: \"suspicious\"\n    },\n    \n    // For email\n    email_subject: `⚠️ Security Alert: Login Attempt from ${ipAddress}`,\n    email_body: `We detected a login attempt to your account from:\n\n🌍 Location: ${city}, ${country}\n📡 IP Address: ${ipAddress}  \n🕐 Time: ${currentTime}\n\nYour verification code is: \n🔒 ${mfaCode}\n\nThis code expires in 10 minutes. If this wasn't you, please secure your account immediately.`,\n    \n    // For GitHub\n    github_title: `MEDIUM RISK: MFA Required for IP ${ipAddress}`,\n    github_body: `## Security Alert - Medium Risk Activity\n\n### Incident Overview\n- **IP Address:** ${ipAddress}\n- **Location:** ${city}, ${country}\n- **Risk Level:** MEDIUM\n- **Action Taken:** MFA Challenge Issued\n- **Timestamp:** ${currentTime}\n\n### Security Response\n- Generated MFA verification code\n- User notified via email\n- Account placed in quarantine pending verification\n- Enhanced monitoring enabled\n\n### Next Steps\n- [ ] Monitor MFA verification completion\n- [ ] Track IP behavior patterns\n- [ ] Review account access logs\n- [ ] Escalate if verification fails\n\n### Notes\nUser must complete MFA verification within 10 minutes. Account access will remain restricted until successful verification.`,\n    github_labels: [\"security\", \"mfa-required\", \"monitoring\"],\n    \n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ],
+      "id": "1e039096-5bc4-4111-b9aa-580d716282fb",
+      "name": "MFA Generator"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"success\": true,\n  \"status\": \"success\", \n  \"user_message\": \"Welcome back! Login successful\",\n  \"user_data\": {\n    \"id\": \"user_{{ $json.body.email }}_{{ $now.format('YYYYMMDD_HHmmss') }}\",\n    \"email\": \"{{ $json.body.email }}\",\n    \"name\": \"{{ $json.body.email.split('@')[0] }}\",\n    \"risk_level\": \"{{ $json.risk_level }}\",\n    \"login_time\": \"{{ $now }}\"\n  },\n  \"auth_payload\": {\n    \"user_id\": \"user_{{ $json.body.email }}_{{ $now.format('YYYYMMDD_HHmmss') }}\",\n    \"email\": \"{{ $json.body.email }}\",\n    \"name\": \"{{ $json.body.email.split('@')[0] }}\",\n    \"risk_score\": \"{{ $json.risk_score }}\",\n    \"risk_level\": \"{{ $json.risk_level }}\",\n    \"threat_level\": \"{{ $json.threat_level }}\",\n    \"device_trust\": \"{{ $json.device_trust }}\",\n    \"session_duration\": 86400\n  },\n  \"audit_data\": {\n    \"audit_id\": \"audit_{{ $now.format('YYYYMMDD_HHmmss') }}_{{ $json.body.email }}\",\n    \"timestamp\": \"{{ $now }}\",\n    \"email\": \"{{ $json.body.email }}\",\n    \"action\": \"login_success\", \n    \"risk_score\": \"{{ $json.risk_score }}\",\n    \"risk_level\": \"{{ $json.risk_level }}\",\n    \"ip_address\": \"{{ $json['headers']['x-real-ip'] }}\",\n    \"user_agent\": \"{{ $json['headers']['user-agent'] }}\",\n    \"country\": \"{{ $json['headers']['cf-ipcountry'] }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        880,
+        448
+      ],
+      "id": "b1e258d2-a4d8-4921-939e-f2a6f9bb25bd",
+      "name": "Set"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "DATATABLE_ID_REDACTED",
+          "mode": "list",
+          "cachedResultName": "Platform User Login Audit",
+          "cachedResultUrl": "/projects/PROJECT_ID_REDACTED/datatables/DATATABLE_ID_REDACTED"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $json.audit_data.timestamp }}",
+            "email": "={{ $json.auth_payload.email }}",
+            "action": "={{ $json.audit_data.action }}",
+            "riskScore": "={{ $json.auth_payload.risk_score }}",
+            "riskLevel": "={{ $json.auth_payload.risk_level }}",
+            "ipaddress": "={{ $json.audit_data.ip_address }}",
+            "country": "={{ $json.audit_data.country }}",
+            "userAgent": "={{ $json.audit_data.user_agent }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "userID",
+              "displayName": "userID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "userAgent",
+              "displayName": "userAgent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "action",
+              "displayName": "action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "riskLevel",
+              "displayName": "riskLevel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "aiConfidence",
+              "displayName": "aiConfidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "primaryConcern",
+              "displayName": "primaryConcern",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "sessonId",
+              "displayName": "sessonId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "mfaMethod",
+              "displayName": "mfaMethod",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "loginCount",
+              "displayName": "loginCount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "country",
+              "displayName": "country",
+              "required": false,
+              "defaultMatch

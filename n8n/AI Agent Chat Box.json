@@ -1,0 +1,586 @@
+{
+  "name": "Multimodal Product Valuation System",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "",
+        "height": 788,
+        "width": 2548,
+        "color": 5
+      },
+      "id": "73f0b50f-741f-468d-b063-534ff92719b8",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2464,
+        -256
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.contentType }}",
+                    "rightValue": "text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "d22650fe-b93a-4dff-9224-a0862f464f2f"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "56753423-3bf0-4edb-a967-fb3deae7a5ac",
+                    "leftValue": "={{ $json.contentType }}",
+                    "rightValue": "image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d53ecbdc-fc6d-4d6c-9795-b641a829b2cc",
+                    "leftValue": "={{ $json.conversationState }}",
+                    "rightValue": "menu_shown",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -1808,
+        64
+      ],
+      "id": "72e4982c-f4ff-465d-a0cc-27683396f6e4",
+      "name": "Switch Statement"
+    },
+    {
+      "parameters": {
+        "content": "## Multimodal Product Valuation Workflow\n### Multi-modal valuation system that analyzes products through text, images, or videos to provide market price estimates.\n\n----\n\nInput Processing Paths:\n  - Text Analysis: Direct description → Text Analysis Node → AI Valuation\n  - Image Analysis: Image URL → Analyze Image Node → AI Valuation\n  - Video Analysis: Video URL → Analyze Video Node → AI Valuation\n\nCore Components:\n  - Chat Trigger: Detects user input (text descriptions, image URLs, or video URLs)\n  - Content Router: Auto-detects input type and routes to appropriate analysis pipeline\n\nMulti-Modal Analysis:\n  - Text Analysis: Processes product descriptions via Message a Model node\n  - Image Analysis: Analyzes product images via Analyze Image node\n  - Video Analysis: Examines product videos via Analyze Video node\n\nResponse Formatter: Unifies all analysis outputs into standardized valuation format\nResponse Handler: Delivers clean, formatted results to user interface\n\nUnified Output Format:\n  - HIGH/LOW price ranges with confidence percentages\n  - Structured valuation metrics across all input types\n  - Session based conversation memory with context persistence\n  - Standardized payload for consistent chat display\n\n---- \n\nKey Features:\n  - Single entry point handles all three input modalities\n  - Automatic type detection (text vs. image URLs vs. video URLs) through JavaScript\n  - Consistent output formatting regardless of input source\n  - Error handling with helpful user guidance\n  - Conversation continuity with session tracking\n\nError Handling:\n  - Invalid inputs trigger guidance message: \"Please provide a product description, image URL, or video URL for valuation.\"\n  - Failed analyses provide clear error messaging\n  - Graceful fallbacks for unsupported content types\n\nThe system ensures seamless user experience whether describing products verbally or providing visual media, delivering professional valuation estimates through a unified interface.\n----",
+        "height": 984,
+        "width": 2236,
+        "color": 7
+      },
+      "id": "2d8e4cfd-8c03-4967-92af-7da3f2abc593",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2256,
+        -1168
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/vision-model",
+          "mode": "list",
+          "cachedResultName": "models/vision-model"
+        },
+        "text": "=Analyze this {{ $('Webhook').item.json.webhookUrl }} product description and provide a detailed valuation with these exact headings:\n\nPRODUCT DESCRIPTION:\n[Describe the product brand, model, colorway, condition, features]\n\nMARKET ANALYSIS:\n[Analyze current market demand, rarity, and trends]\n\nVALUATION ESTIMATE:\nHIGH: [number]\nLOW: [number] \nCONFIDENCE: [number]%\n\nPlease be specific and accurate in your assessment. ",
+        "imageUrls": "={{ $('Webhook').item.json.body.chatInput }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.aiVisionModel",
+      "typeVersion": 1,
+      "position": [
+        -1520,
+        32
+      ],
+      "id": "1e0731d7-0677-4dff-af19-96855bd285d5",
+      "name": "Analyze Image",
+      "credentials": {
+        "aiApi": {
+          "id": "API_KEY_ID_REDACTED",
+          "name": "AI Vision API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1728,
+        848
+      ],
+      "id": "ac662d94-1dbc-4e82-8960-bbcd48be0e14",
+      "name": "Simple Memory",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/text-model",
+          "mode": "list",
+          "cachedResultName": "models/text-model"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=\nAnalyze this {{ $('Webhook').item.json.body.chatInput }} product description and provide a detailed valuation with these exact headings:\n\nPRODUCT DESCRIPTION:\n[Summarize the provided details]\n\nMARKET ANALYSIS:\n[Analyze current market demand and trends]\n\nVALUATION ESTIMATE:\nHIGH: [number range]\nLOW: [number range] \nCONFIDENCE: [number]%\n\nPlease be specific and accurate. "
+            }
+          ]
+        },
+        "options": {
+          "systemMessage": "You are a helpful assistant for product valuation, you provide product related information to our customers."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.aiTextModel",
+      "typeVersion": 1,
+      "position": [
+        -1584,
+        -96
+      ],
+      "id": "d3bed681-b6dc-4c11-b98f-ee7cd7e25cec",
+      "name": "Analyze Text",
+      "credentials": {
+        "aiApi": {
+          "id": "API_KEY_ID_REDACTED",
+          "name": "AI Text API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "\n## Sample Inputs (Copy and Paste)\n\n### Text Description Option\n \n- ` Looking for a classic design that has become a fashion staple and a versatile item. Known for their durable material, comfortable design, and simple, iconic styling. The product is available in different styles and has been re-released in countless colorways and collaborations.`\nOutput Should be: Generic product analysis\n\n\n### Image URL Option\n \n- ` https://example.com/images/product.jpg`\nOutput Should be: Product image analysis\n\n### Video URL Option (Feature Temporarily Disabled) \n \n- ` This feature will work in the future.`\n- ` Requires you to upload and copy video using .mp4 .mov or other extensions and upload it. Does not support external videos.`\n\n\n\n",
+        "height": 484,
+        "width": 564,
+        "color": 7
+      },
+      "id": "fbab2fa5-9bff-4acf-9706-2d79457fc983",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2880,
+        -112
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 144,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1760,
+        832
+      ],
+      "typeVersion": 1,
+      "id": "8226c352-be4b-44b3-b2cb-45734cfcc4d5",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "89534511-3062-4add-b55d-3f4bc9536bfc",
+              "leftValue": "={{ $json.chatInput }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1584,
+        624
+      ],
+      "id": "52f5e871-eb92-46a6-bdab-4e6eaede7e96",
+      "name": "If",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "###         Analyzes End-User Input",
+        "height": 640,
+        "width": 358,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1648,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "2ebe3108-1422-48d1-9883-01471af7c2b3",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "### Simple HTTP Post using External Service\n\n- `It posts a message after after the user responds to the AI agent  analyzes the input leaving a disconnect message, which allows the user to visual see the workflow end by their response and not the agent's`",
+        "height": 228,
+        "width": 324,
+        "color": 2
+      },
+      "id": "a47b81b9-1019-4a7b-940f-e04b9ed021af",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        -176
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### JS Code\n\n- `It detects the type of input the end-user sends and provides it a variable to connect to the switch statement (menu-drive) and branches off to different types of analysis based on the input`",
+        "height": 228,
+        "width": 324,
+        "color": 2
+      },
+      "id": "748f68a5-a731-4672-86ed-7401a11d3309",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2128,
+        -224
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### JS Code\n\n- `It provides the specific output for each analysis node that is connected and sections the types of outputs given by the type of analysis. If it doesn't meet the requirements it displays a default message`",
+        "height": 228,
+        "width": 324,
+        "color": 2
+      },
+      "id": "1aea569c-b81f-4b93-aff4-6c45841e8447",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1232,
+        -128
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst chatInput = data.chatInput || data.message || data.text || '';\n\nlet contentType = 'text';\nlet mediaUrl = null;\nlet conversationState = data.conversationState || 'waiting_for_start';\n\n// Clean and trim the input\nconst cleanInput = chatInput.trim();\n\n// FIRST check if it's ANY URL - capture ALL links\nif (cleanInput.match(/https?:\\/\\/[^\\s]+/i)) {\n    contentType = 'image'; // Force to image analysis\n    mediaUrl = cleanInput;\n    conversationState = 'analyzing_image';\n}\n// ONLY if it's NOT a URL, then check for text commands\nelse if (cleanInput && cleanInput.length > 2 && !cleanInput.toLowerCase().includes('start')) {\n    contentType = 'text';\n    conversationState = 'analyzing_text';\n}\n// Start command (only if not a URL)\nelse if (cleanInput && cleanInput.toLowerCase().includes('start')) {\n    contentType = 'text';\n    conversationState = 'menu_shown';\n}\n// Default fallback\nelse {\n    contentType = 'text';\n    conversationState = 'waiting_for_start';\n}\n\nreturn {\n    chatInput: cleanInput,\n    contentType: contentType, // URLs will ALWAYS be 'image'\n    mediaUrl: mediaUrl, // URLs will have the link here\n    sessionId: data.sessionId,\n    userId: data.userId,\n    conversationState: conversationState\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2032,
+        96
+      ],
+      "id": "484dae4a-c927-4585-934a-7b3dc1e44f89",
+      "name": "Code JavaScript -1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst userInput = data.chatInput || data.message || '';\n\n// EXTRACT and STORE responses from ALL analysis nodes\nlet analysisResult = '';\n\n// 1. Check for Image/Video analysis result\nif (data.content && data.content.parts && data.content.parts[0] && data.content.parts[0].text) {\n    analysisResult = data.content.parts[0].text;\n    console.log('STORED: Image analysis result');\n} \n// 2. Check for Text analysis result  \nelse if (data.response || data.output) {\n    analysisResult = data.response || data.output;\n    console.log('STORED: Text analysis result');\n}\n// 3. Check for AI response from other sources\nelse if (data.ai_response || data.text) {\n    analysisResult = data.ai_response || data.text;\n    console.log('STORED: AI response result');\n}\n\nconsole.log('STORED ANALYSIS:', analysisResult);\n\n// Handle user feedback and disconnection\nconst completionWords = ['no', 'done', 'exit', 'quit', 'that\\'s all', 'nothing else', 'no thanks'];\nconst userWantsToExit = userInput && completionWords.some(word => \n    userInput.toLowerCase().includes(word)\n);\n\n// If user wants to disconnect\nif (userWantsToExit) {\n    return [{ \n        json: {\n            payload: \"🔌 System Disconnected. Thank you for using our valuation service!\",\n            routeTo: 'respondToChat'\n        }\n    }];\n}\n\n// If user provides feedback (rating 1-5)\nif (userInput && (userInput.match(/[1-5]/) || userInput.toLowerCase().includes('rating') || userInput.toLowerCase().includes('feedback'))) {\n    return [{ \n        json: {\n            payload: \"✅ Thank you for your feedback! Is there anything else I can help you with today?\",\n            routeTo: 'respondToChat'\n        }\n    }];\n}\n\n// OUTPUT: If we successfully GRABBED any analysis result, format and send to chat\nif (analysisResult && (analysisResult.includes('PRODUCT DESCRIPTION:') || analysisResult.includes('HIGH:') || analysisResult.includes('VALUATION ESTIMATE:'))) {\n    let formattedResponse = analysisResult\n        .replace(/\\\\n/g, '\\n')\n        .replace(/\"/g, '')\n        .replace(/{/g, '')\n        .replace(/}/g, '');\n    \n    return [{ \n        json: {\n            payload: `\\n${formattedResponse}\\n\\n Was this accurate? Rate 1-5 and share feedback.`,\n            routeTo: 'respondToChat'\n        }\n    }];\n}\n\n// ROUTING: If user sends NEW input (not analysis results), route to appropriate analysis\nif (userInput.includes('http') && (userInput.match(/\\.(jpg|jpeg|png|gif|webp)/i) || data.mediaUrl)) {\n    return [{ \n        json: {\n            chatInput: userInput,\n            mediaUrl: data.mediaUrl || userInput,\n            sessionId: data.sessionId,\n            routeTo: 'analyzeImage'\n        }\n    }];\n}\n\nif (userInput && userInput.length > 10 && !userInput.includes('http')) {\n    return [{ \n        json: {\n            prompt: `Analyze this product description for valuation: \"${userInput}\". Provide PRODUCT DESCRIPTION, MARKET ANALYSIS, and VALUATION ESTIMATE with HIGH, LOW, CONFIDENCE.`,\n            sessionId: data.sessionId,\n            routeTo: 'textAnalysis'\n        }\n    }];\n}\n\n// DEFAULT: Only show this if NO analysis results were found AND no valid new input\nreturn [{ \n    json: {\n        payload: \"Please provide a product description or image URL for valuation.\",\n        routeTo: 'respondToChat'\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1184,
+        128
+      ],
+      "id": "b48571b1-7f0d-4475-a891-7f72632c0ec9",
+      "name": "Code JavaScript - 2"
+    },
+    {
+      "parameters": {
+        "message": "={{ $json.data }}",
+        "waitUserReply": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1,
+      "position": [
+        -1056,
+        624
+      ],
+      "id": "1a90e37b-a23e-43c8-8f5d-75d2bc63a563",
+      "name": "HTTP Response"
+    },
+    {
+      "parameters": {
+        "url": "https://example.com/raw/text-sample",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1312,
+        624
+      ],
+      "id": "cf1fc1b7-e761-4230-aa52-e9f63db177ce",
+      "name": "HTTP GET",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook-uuid-redacted",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2256,
+        96
+      ],
+      "id": "dd388103-13dc-4e8e-b882-d094c7c399ec",
+      "name": "Webhook",
+      "webhookId": "webhook-uuid-redacted"
+    },
+    {
+      "parameters": {
+        "message": "={{ $json.payload }}",
+        "options": {
+          "memoryConnection": true,
+          "limitWaitTime": {
+            "values": {
+              "resumeAmount": 2,
+              "resumeUnit": "minutes"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1,
+      "position": [
+        -1872,
+        624
+      ],
+      "id": "0e377692-37b8-483f-90c3-a80b6c5ce615",
+      "name": "Respond to Chat",
+      "alwaysOutputData": false,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.payload }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -896,
+        128
+      ],
+      "id": "046a7990-8df4-4741-a86c-6deb699c9970",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Switch Statement": {
+      "main": [
+        [
+          {
+            "node": "Analyze Text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Analyze Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Image": {
+      "main": [
+        [
+          {
+            "node": "Code JavaScript - 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Respond to Chat",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Text": {
+      "main": [
+        [
+          {
+            "node": "Code JavaScript - 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "HTTP GET",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code JavaScript -1": {
+      "main": [
+        [
+          {
+            "node": "Switch Statement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code JavaScript - 2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP GET": {
+      "main": [
+        [
+          {
+            "node": "HTTP Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code JavaScript -1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Chat": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e88d3830-7335-4f8e-aef7-7a5beb8db070",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "instance-id-redacted"
+  },
+  "id": "workflow-id-redacted",
+  "tags": []
+}
